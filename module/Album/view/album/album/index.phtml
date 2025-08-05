@@ -1,0 +1,15 @@
+<h1><?= $this->title ?> List</h1>
+
+<?php if (count($this->albums) == 0): ?>
+    <p>No albums found.</p>
+<?php else: ?>
+    <ul>
+    <?php foreach ($this->albums as $album): ?>
+        <li>
+            ID: <?= $this->escapeHtml($album->id) ?> - 
+            Artist: <?= $this->escapeHtml($album->artist) ?> - 
+            Title: <?= $this->escapeHtml($album->title) ?>
+        </li>
+    <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
