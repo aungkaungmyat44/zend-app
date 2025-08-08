@@ -15,6 +15,15 @@ class Album
         $this->title  = !empty($data['title']) ? $data['title'] : null;
     }
 
+    public function getArrayCopy()
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'artist' => $this->artist,
+        ];
+    }
+
     public function getId()
     {
         return $this->id;

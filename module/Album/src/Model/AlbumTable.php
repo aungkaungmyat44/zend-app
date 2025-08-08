@@ -4,6 +4,7 @@ namespace Album\Model;
 
 use RuntimeException;
 use Zend\Db\TableGateway\TableGatewayInterface;
+use Album\Model\Album;
 
 class AlbumTable
 {
@@ -19,34 +20,34 @@ class AlbumTable
         return $this->tableGateway->select();
     }
 
-    public function getArtist($id)
+    public function getAlbum($id)
     {
         $id = (int) $id;
         $rowset = $this->tableGateway->select(['id' => $id]);
         $row = $rowset->current();
         if (! $row) {
-            throw new RuntimeException(sprintf('Artist with ID %d not found', $id));
+            throw new RuntimeException(sprintf('Album with ID %d not found', $id));
         }
         return $row;
     }
 
-    public function saveArtist(Artist $artist)
+    public function saveAlbum(Album $album)
     {
-        $data = $artist->getArrayCopy();
+        $data = $album->getArrayCopy();
 
-        if (empty($artist->id)) {
+        if (empty($album->id)) {
             $this->tableGateway->insert($data);
             return;
         }
 
-        if (! $this->getArtist($artist->id)) {
-            throw new RuntimeException(sprintf('Cannot update artist with ID %d; does not exist', $artist->id));
+        if (! $this->getAlbum($album->id)) {
+            throw new RuntimeException(sprintf('Cannot update album with ID %d; does not exist', $album->id));
         }
 
-        $this->tableGateway->update($data, ['id' => $artist->id]);
+        $this->tableGateway->update($data, ['id' => $album->id]);
     }
 
-    public function deleteArtist($id)
+    public function deleteAlbum($id)
     {
         $this->tableGateway->delete(['id' => (int) $id]);
     }

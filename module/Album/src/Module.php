@@ -11,6 +11,11 @@ use Zend\Db\Adapter\AdapterInterface;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Album\Model\Album;
+use Album\Model\AlbumTable;
+use Album\Form\AlbumForm;
+use Album\Controller\AlbumController;
+use Zend\ServiceManager\Factory\InvokableFactory;
 
 class Module implements ConfigProviderInterface
 {
@@ -25,16 +30,17 @@ class Module implements ConfigProviderInterface
     {
         return [
             'factories' => [
-                Model\AlbumTable::class => function($container) {
-                    $tableGateway = $container->get(Model\AlbumGateway::class);
-                    return new Model\AlbumTable($tableGateway);
+                AlbumTable::class => function($container) {
+                    $tableGateway = $container->get(AlbumGateway::class);
+                    return new AlbumTable($tableGateway);
                 },
-                Model\AlbumGateway::class => function($container) {
+                AlbumGateway::class => function($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $resultSetPrototype = new ResultSet();
-                    $resultSetPrototype->setArrayObjectPrototype(new Model\Album);
+                    $resultSetPrototype->setArrayObjectPrototype(new Album);
                     return new TableGateway('artists', $dbAdapter, null, $resultSetPrototype);
                 },
+                AlbumForm::class => InvokableFactory::class
             ]        
         ];
     }
@@ -43,10 +49,11 @@ class Module implements ConfigProviderInterface
     {
         return [
             'factories' => [
-                    \Album\Controller\AlbumController::class => function($container) {
-                    return new \Album\Controller\AlbumController(
+                    AlbumController::class => function($container) {
+                    return new AlbumController(
                         "Artist Album",
-                        $container->get(Model\AlbumTable::class)
+                        $container->get(AlbumTable::class),
+                        $container->get(AlbumForm::class)
                     );
                 },
             ],
